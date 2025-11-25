@@ -1,0 +1,64 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      -name: Setup emsdk
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          no-cache: true
+
+      - name: Setup directories
+        run: |
+          mkdir -p dist/wasm
+          mkdir -p dist/js
+          mkdir -p dist/css
+
+      - name: Build wasm
+        run: |
+          emcc --bind ./cpp/main.cpp -o ./dist/wasm/xy_model.js \
+            -s USE_SDL=3 \
+            -s ENVIRONMENT='web' \
+            -s MODULARIZE=0 \
+            -s EXPORT_NAME='GGModel' \
+            -ffast-math \
+            -O3 \
+            -s INITIAL_MEMORY=64MB \
+            -s ALLOW_MEMORY_GROWTH=1
+    
+      - name: Copy static files
+        run: |
+          cp -r ./web/js/* ./dist/js/
+          cp -r ./web/css/* ./dist/css/
+          cp -r ./web/index.html ./dist/
+
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
