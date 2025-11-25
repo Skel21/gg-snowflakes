@@ -1,8 +1,3 @@
-/* Range input track */
-/*input[type="range"] {
-/*    background: transparent; /* Important: prevents background conflicts */
-/*} */
-
 @import "tailwindcss";
 
 @layer base {

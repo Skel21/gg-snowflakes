@@ -69,9 +69,70 @@ function set_grid_size(size) {
     Module.set_grid_size(parseInt(size));
 }
 
+function applyPreset(index) {
+    Module.apply_preset(index);
+    
+    // Update all UI controls with actual values from C++
+    alphaInput.value = Module.get_current_alpha().toFixed(3);
+    alphaInput.val(Module.get_current_alpha().toFixed(3));
+    alphaOutput.text(Module.get_current_alpha().toFixed(3));
+    
+    betaInput.value = Module.get_current_beta().toFixed(2);
+    betaInput.val(Module.get_current_beta().toFixed(2));
+    betaOutput.text(Module.get_current_beta().toFixed(2));
+    
+    muInput.value = Module.get_current_mu().toFixed(4);
+    muInput.val(Module.get_current_mu().toFixed(4));
+    muOutput.text(Module.get_current_mu().toFixed(4));
+    
+    kappaInput.value = Module.get_current_kappa().toFixed(4);
+    kappaInput.val(Module.get_current_kappa().toFixed(4));
+    kappaOutput.text(Module.get_current_kappa().toFixed(4));
+    
+    rhoInput.value = Module.get_current_rho().toFixed(3);
+    rhoInput.val(Module.get_current_rho().toFixed(3));
+    rhoOutput.text(Module.get_current_rho().toFixed(3));
+    
+    thetaInput.value = Module.get_current_theta().toFixed(4);
+    thetaInput.val(Module.get_current_theta().toFixed(4));
+    thetaOutput.text(Module.get_current_theta().toFixed(4));
+    
+    gridSizeInput.value = Module.get_current_grid_size();
+    gridSizeInput.val(Module.get_current_grid_size());
+    gridSizeOutput.text(Module.get_current_grid_size());
+}
+
+function populatePresets() {
+    const presetCount = Module.get_preset_count();
+    const presetContainer = $("#preset-container");
+    
+    let html = '<select id="preset-select" class="w-full bg-gray-700 text-white p-3 rounded-lg">';
+    html += '<option value="-1">-- Select a Preset --</option>';
+    
+    for (let i = 0; i < presetCount; i++) {
+        const info = Module.get_preset_info(i);
+        html += `<option value="${i}">${info}</option>`;
+    }
+    
+    html += '</select>';
+    html += '<div id="preset-description" class="text-sm text-gray-400 mt-2"></div>';
+    
+    presetContainer.html(html);
+    
+    $("#preset-select").on("change", function() {
+        const index = parseInt($(this).val());
+        if (index >= 0) {
+            const info = Module.get_preset_info(index);
+            $("#preset-description").text(info.description);
+            applyPreset(index);
+        }
+    });
+}
 
 Module.onRuntimeInitialized = () => {
     Module.init();
+
+    populatePresets();
 
     alphaInput.value = "0.4";
     alphaInput.val("0.4");

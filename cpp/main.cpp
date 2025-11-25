@@ -1,5 +1,6 @@
 #include "./vis/vis.h"
 #include "./src/gg_model.h"
+#include "./src/presets.h"
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_hints.h>
 #include <SDL3/SDL_events.h>
@@ -97,38 +98,60 @@ void set_grid_size(int size)
 }
 
 
-void set_beta(float beta)
-{
-    settings->beta = beta;
+void set_beta(float beta) { settings->beta = beta; }
+void set_rho(float rho) { settings->rho = rho; }
+void set_theta(float theta) { settings->theta = theta; }
+void set_alpha(float alpha) { settings->alpha = alpha; }
+void set_mu(float mu) { settings->mu = mu; }
+void set_kappa(float kappa) { settings->kappa = kappa; }
+void set_iterations_per_frame(int iterations) { iterationsPerFrame = iterations; }
+
+float get_current_alpha() { return settings->alpha; }
+float get_current_beta() { return settings->beta; }
+float get_current_mu() { return settings->mu; }
+float get_current_kappa() { return settings->kappa; }
+float get_current_rho() { return settings->rho; }
+float get_current_theta() { return settings->theta; }
+float get_current_gamma() { return settings->gamma; }
+int get_current_grid_size() { return settings->gridSize; }
+
+
+int get_preset_count() { return static_cast<int>(getPresetCount()); }
+
+
+std::string get_preset_info(int index)
+{   
+    const auto& preset = getPreset(index);
+    return preset.name;
 }
 
-void set_rho(float rho)
-{
-    settings->rho = rho;
-}
 
-void set_theta(float theta)
+void apply_preset(int index)
 {
-    settings->theta = theta;
-}
-
-void set_alpha(float alpha)
-{
-    settings->alpha = alpha;
-}
-
-void set_mu(float mu)
-{
-    settings->mu = mu;
-}
-
-void set_kappa(float kappa)
-{
-    settings->kappa = kappa;
-}
-void set_iterations_per_frame(int iterations)
-{
-    iterationsPerFrame = iterations;
+    if (index < 0 || index >= static_cast<int>(getPresetCount())) {
+        return;
+    }
+    
+    #ifdef __EMSCRIPTEN__
+    emscripten_cancel_main_loop();
+    #endif
+    
+    const auto& preset = getPreset(index);
+    
+    set_alpha(preset.settings.alpha);
+    set_beta(preset.settings.beta);
+    set_mu(preset.settings.mu);
+    set_kappa(preset.settings.kappa);
+    set_rho(preset.settings.rho);
+    set_theta(preset.settings.theta);
+    settings->gamma = preset.settings.gamma;
+    settings->sigma = preset.settings.sigma; // TODO: sigma does not do anything
+    set_grid_size(preset.settings.gridSize);
+    reset();
+    
+    #ifdef __EMSCRIPTEN__
+    emscripten_set_main_loop(main_loop, 0, 1);
+    #endif
 }
 
 
@@ -168,6 +191,19 @@ EMSCRIPTEN_BINDINGS()
     emscripten::function("set_iterations_per_frame", &set_iterations_per_frame);
     emscripten::function("set_window_size", &set_window_size);
     emscripten::function("set_grid_size", &set_grid_size);
+
+    emscripten::function("get_current_alpha", &get_current_alpha);
+    emscripten::function("get_current_beta", &get_current_beta);
+    emscripten::function("get_current_mu", &get_current_mu);
+    emscripten::function("get_current_kappa", &get_current_kappa);
+    emscripten::function("get_current_rho", &get_current_rho);
+    emscripten::function("get_current_theta", &get_current_theta);
+    emscripten::function("get_current_gamma", &get_current_gamma);
+    emscripten::function("get_current_grid_size", &get_current_grid_size);
+
+    emscripten::function("get_preset_count", &get_preset_count);
+    emscripten::function("get_preset_info", &get_preset_info);
+    emscripten::function("apply_preset", &apply_preset);
 }
 #endif
 
