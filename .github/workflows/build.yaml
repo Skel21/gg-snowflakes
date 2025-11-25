@@ -43,8 +43,14 @@ jobs:
       - name: Copy static files
         run: |
           cp -r ./web/js/* ./dist/js/
-          cp -r ./web/css/* ./dist/css/
           cp -r ./web/index.html ./dist/
+
+      - name: Build tailwindcss
+        uses: ZoeyVid/tailwindcss-update@main
+        with:
+          input: ./web/css/style.css
+          output: ./dist/css/style.css
+          params: "--minify"
 
 
       - name: Upload artifact

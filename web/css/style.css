@@ -3,6 +3,12 @@
 /*    background: transparent; /* Important: prevents background conflicts */
 /*} */
 
+@import "tailwindcss";
+
+html {
+    font-size: 14px;
+}
+
 input[type="range"]::-webkit-slider-track {
     background: #4b5563; /* gray-600 - lighter than before */
     border-radius: 0.5rem;
