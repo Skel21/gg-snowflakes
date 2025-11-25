@@ -1,0 +1,178 @@
+#include "./vis/vis.h"
+#include "./src/gg_model.h"
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_hints.h>
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#include <emscripten/html5.h>
+#include <emscripten/bind.h>
+#endif
+
+ModelSettings *settings;
+Model *model;
+Visualizer *visualizer;
+int iterationsPerFrame = 1;
+int current_iteration = 0;
+
+
+void main_loop()
+{
+    model->time_step();
+    current_iteration++;
+    if (current_iteration >= iterationsPerFrame)
+    {
+        current_iteration = 0;
+        visualizer->draw(model->snowflake);
+    }
+}
+
+void init()
+{
+    #ifdef __EMSCRIPTEN__
+    SDL_SetHint(SDL_HINT_EMSCRIPTEN_CANVAS_SELECTOR, "#simulation");
+    #endif
+
+    settings = new ModelSettings();
+    settings->gridSize = 400;
+    settings->rho = 0.635f;
+    settings->beta = 1.6f;
+    settings->kappa = 0.005f;
+    settings->mu =0.015f;
+    settings->gamma = 0.0005f;
+    settings->theta = 0.025f;
+    settings->sigma = 0.0f;
+    settings->alpha = 0.4f;
+
+    model = new Model(*settings);
+    visualizer = new Visualizer(*settings, 1000);
+}
+
+void reset()
+{
+    model->initialize();
+}
+
+void set_window_size(int size)
+{
+    #ifdef __EMSCRIPTEN__
+    emscripten_cancel_main_loop();
+    #endif
+    
+    visualizer->resizeWindow(size);
+    
+    #ifdef __EMSCRIPTEN__
+    emscripten_set_main_loop(main_loop, 0, 1);
+    #endif
+}
+
+void set_grid_size(int size)
+{
+    #ifdef __EMSCRIPTEN__
+    emscripten_cancel_main_loop();
+    #endif
+    
+    visualizer->resizeGrid(size);
+    delete model;
+    model = new Model(*settings);
+    
+    #ifdef __EMSCRIPTEN__
+    emscripten_set_main_loop(main_loop, 0, 1);
+    #endif
+}
+
+
+void set_beta(float beta)
+{
+    settings->beta = beta;
+}
+
+void set_rho(float rho)
+{
+    settings->rho = rho;
+}
+
+void set_theta(float theta)
+{
+    settings->theta = theta;
+}
+
+void set_alpha(float alpha)
+{
+    settings->alpha = alpha;
+}
+
+void set_mu(float mu)
+{
+    settings->mu = mu;
+}
+
+void set_kappa(float kappa)
+{
+    settings->kappa = kappa;
+}
+void set_iterations_per_frame(int iterations)
+{
+    iterationsPerFrame = iterations;
+}
+
+
+
+#ifdef __EMSCRIPTEN__
+
+void set_main_loop()
+{
+    emscripten_set_main_loop(main_loop, 0, 1);
+}
+
+void play_pause(bool paused)
+{
+    if (paused)
+    {
+        emscripten_cancel_main_loop();
+    }
+    else
+    {
+        emscripten_set_main_loop(main_loop, 0, 1);
+    }
+}
+
+EMSCRIPTEN_BINDINGS()
+{
+    emscripten::function("init", &init);
+    emscripten::function("main_loop", &main_loop);
+    emscripten::function("set_main_loop", &set_main_loop);
+    emscripten::function("reset", &reset);
+    emscripten::function("set_beta", &set_beta);
+    emscripten::function("set_rho", &set_rho);
+    emscripten::function("set_theta", &set_theta);
+    emscripten::function("set_alpha", &set_alpha);
+    emscripten::function("set_mu", &set_mu);
+    emscripten::function("set_kappa", &set_kappa);
+    emscripten::function("play_pause", &play_pause);
+    emscripten::function("set_iterations_per_frame", &set_iterations_per_frame);
+    emscripten::function("set_window_size", &set_window_size);
+    emscripten::function("set_grid_size", &set_grid_size);
+}
+#endif
+
+#ifndef __EMSCRIPTEN__
+int main()
+{
+    init();
+    bool running = true;
+    SDL_Event event;
+
+    while (running)
+    {
+        while (SDL_PollEvent(&event))
+        {
+            if (event.type == SDL_EVENT_QUIT)
+            {
+                running = false;
+            }
+        }
+        main_loop();
+    }
+    return 0;
+}
+#endif
