@@ -2,6 +2,8 @@
 #include "./src/gg_model.h"
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_hints.h>
+#include <SDL3/SDL_events.h>
+#include <iostream>
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #include <emscripten/html5.h>
@@ -13,10 +15,24 @@ Model *model;
 Visualizer *visualizer;
 int iterationsPerFrame = 1;
 int current_iteration = 0;
+SDL_Event event;
 
 
 void main_loop()
 {
+    // Handle events
+    while (SDL_PollEvent(&event)) {
+        #ifndef __EMSCRIPTEN__
+        if (event.type == SDL_EVENT_QUIT) {
+            exit(0);
+        }
+        #endif
+        if (event.type == SDL_EVENT_MOUSE_WHEEL) {
+            visualizer->changeDrawingScale(1.0f + event.wheel.y / 20.0f);
+        }
+    }
+
+    // Advance model
     model->time_step();
     current_iteration++;
     if (current_iteration >= iterationsPerFrame)

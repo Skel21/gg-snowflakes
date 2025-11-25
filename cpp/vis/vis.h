@@ -3,6 +3,7 @@
 
 #include "../src/gg_model.h"
 #include <SDL3/SDL.h>
+#include <SDL3/SDL_events.h>
 #include <algorithm>
 #include <cstdint>
 #include "colormap.h"
@@ -17,10 +18,12 @@ class Visualizer {
         int getWindowSize();
         void resizeWindow(int newWindowSize);
         void resizeGrid(int newGridSize);
+        void changeDrawingScale(float delta);
     private:
         int windowSize;
         float hexHorizontalDistance;
         float hexVerticalDistance;
+        float drawingScale;
         int gridMiddle;
         int windowMiddle;
 
@@ -31,7 +34,6 @@ class Visualizer {
         SDL_Texture* texture;
         uint32_t* pixels = nullptr;
         std::vector<Point> pixelToHex; // Cache: maps each pixel to its nearest hex cell
-        std::vector<Point> pixelInSystem; // TODO
 
         void getHexIndex(float x, float y, int& row, int& col);
 };
@@ -47,7 +49,8 @@ Visualizer::~Visualizer() {
 Visualizer::Visualizer(ModelSettings& settings, int windowSize)
     : settings(&settings), windowSize(windowSize) {
     // Calculate hex spacing based on window and grid size
-    hexVerticalDistance = windowSize / settings.gridSize * sqrt(3.0f) / 2.0f;
+    drawingScale = 1.0f;
+    hexVerticalDistance = windowSize / settings.gridSize * sqrt(3.0f) / 2.0f * drawingScale;
     hexHorizontalDistance = (2.0f / sqrt(3.0f)) * hexVerticalDistance;
     gridMiddle = settings.gridSize / 2;
     windowMiddle = windowSize / 2;
@@ -95,7 +98,7 @@ void Visualizer::resizeWindow(int newWindowSize) {
     windowMiddle = windowSize / 2;
     
     // Recalculate hex spacing
-    hexVerticalDistance = windowSize / settings->gridSize * sqrt(3.0f) / 2.0f;
+    hexVerticalDistance = windowSize / settings->gridSize * sqrt(3.0f) / 2.0f * drawingScale;
     hexHorizontalDistance = (2.0f * sqrt(3.0f) / 3.0f) * hexVerticalDistance;
     
     SDL_DestroyTexture(texture);
@@ -126,7 +129,7 @@ void Visualizer::resizeGrid(int newGridSize) {
     gridMiddle = settings->gridSize / 2;
 
     // Recalculate hex spacing
-    hexVerticalDistance = windowSize / settings->gridSize * sqrt(3.0f) / 2.0f;
+    hexVerticalDistance = windowSize / settings->gridSize * sqrt(3.0f) / 2.0f * drawingScale;
     hexHorizontalDistance = (2.0f * sqrt(3.0f) / 3.0f) * hexVerticalDistance;
 
     // Rebuild pixel-to-hex mapping
@@ -201,4 +204,23 @@ void Visualizer::draw(Grid& grid) {
 }
 
 
+void Visualizer::changeDrawingScale(float delta) {
+    drawingScale *= delta;
+    drawingScale = std::clamp(drawingScale, 0.5f, 100.0f);
+    hexVerticalDistance = windowSize / settings->gridSize * sqrt(3.0f) / 2.0f * drawingScale;
+    hexHorizontalDistance = (2.0f / sqrt(3.0f)) * hexVerticalDistance;
+
+    // Rebuild pixel-to-hex mapping
+    int row, col;
+    for (int y = 0; y < windowSize; ++y) {
+        for (int x = 0; x < windowSize; ++x) {
+            getHexIndex(x, y, row, col);
+            if (row < 0 || row >= settings->gridSize || col < 0 || col >= settings->gridSize) {
+                pixelToHex[y * windowSize + x] = Point{0, 0};
+            } else {
+                pixelToHex[y * windowSize + x] = Point{row, col};
+            }
+        }
+    }
+}
 #endif // GG_VIS_H
