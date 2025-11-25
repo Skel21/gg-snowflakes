@@ -20,7 +20,6 @@ jobs:
       - name: Setup emsdk
         uses: mymindstorm/setup-emsdk@v14
         with:
-          version: '4.0.4'
           no-cache: true
 
       - name: Setup directories
@@ -31,7 +30,7 @@ jobs:
 
       - name: Build wasm
         run: |
-          emcc --bind ./cpp/main.cpp -o ./dist/wasm/xy_model.js \
+          emcc --bind ./cpp/main.cpp -o ./dist/wasm/gg_model.js \
             -s USE_SDL=3 \
             -s ENVIRONMENT='web' \
             -s MODULARIZE=0 \
