@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XY Model Simulation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-gray-100">
+
+    <div class="flex flex-col md:flex-row h-screen">
+        <!-- Simulation Canvas -->
+        <div class="flex-1 flex items-center justify-center">
+            <canvas id="simulation" class="w-[min(90vw,90vh)]"></canvas>
+        </div>
+
+        <!-- Sidebar Controls -->
+        <div class="w-full lg:w-80 xl:w-96 bg-gray-800 overflow-y-auto p-6 space-y-12">
+            <div class="text-4xl font-bold flex justify-center items-center flex-col">
+                <h2>Controls</h2>
+                <button id="play-pause-button" class="material-icons text-6xl text-gray-100 hover:text-blue-400" onclick="play_pause()">pause</button>
+            </div>
+
+            <div class="space-y-12 text-2xl">
+                <!-- Iterations Slider -->
+                <div class="space-y-4">
+                    <label for="iterations-per-frame" class="flex items-center justify-around text-gray-300">
+                        Iterations per Frame: <span id="iterations-per-frame-output"></span>
+                    </label>
+                    <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="iterations-per-frame" min="1" max="25" step="1" oninput="set_iterations_per_frame(this.value)" onchange="set_iterations_per_frame(this.value)">
+                </div>
+
+                <!-- Alpha Slider -->
+                <div class="space-y-4">
+                    <label for="alpha" class="flex items-center justify-around text-gray-300">
+                        Alpha: <span id="alpha-output"></span>
+                    </label>
+                    <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="alpha" min="0.0" max="1.0" step="0.01" oninput="set_alpha(this.value)" onchange="set_alpha(this.value)">
+                </div>
+
+                <!-- Beta Slider -->
+                <div class="space-y-4">
+                    <label for="beta" class="flex items-center justify-around text-gray-300">
+                        Beta: <span id="beta-output"></span>
+                    </label>
+                    <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="beta" min="1.0" max="3.0" step="0.01" oninput="set_beta(this.value)" onchange="set_beta(this.value)">
+                </div>
+
+                <!-- Mu Slider -->
+                <div class="space-y-4">
+                    <label for="mu" class="flex items-center justify-around text-gray-300">
+                        Mu: <span id="mu-output"></span>
+                    </label>
+                    <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="mu" min="0.0" max="0.1" step="0.001" oninput="set_mu(this.value)" onchange="set_mu(this.value)">
+                </div>
+
+                <!-- Kappa Slider -->
+                <div class="space-y-4">
+                    <label for="kappa" class="flex items-center justify-around text-gray-300">
+                        Kappa: <span id="kappa-output"></span>
+                    </label>
+                    <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="kappa" min="0.0" max="0.1" step="0.001" oninput="set_kappa(this.value)" onchange="set_kappa(this.value)">
+                </div>
+
+                <!-- Rho Slider -->
+                <div class="space-y-4">
+                    <label for="rho" class="flex items-center justify-around text-gray-300">
+                        Rho: <span id="rho-output"></span>
+                    </label>
+                    <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="rho" min="0.0" max="1.0" step="0.01" oninput="set_rho(this.value)" onchange="set_rho(this.value)">
+                </div>
+
+                <!-- Theta Slider -->
+                <div class="space-y-4">
+                    <label for="theta" class="flex items-center justify-around text-gray-300">
+                        Theta: <span id="theta-output"></span>
+                    </label>
+                    <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="theta" min="0.0" max="0.1" step="0.001" oninput="set_theta(this.value)" onchange="set_theta(this.value)">
+                </div>
+
+                <!-- Grid Size Slider -->
+                <div class="space-y-4">
+                    <label for="grid-size" class="flex items-center justify-around text-gray-300">
+                        Grid Size: <span id="grid-size-output"></span>
+                    </label>
+                    <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="grid-size" min="100" max="1000" step="25" oninput="set_grid_size(this.value)" onchange="set_grid_size(this.value)">
+                </div>
+
+                <!-- Reset Button -->
+                <div class="pt-4">
+                    <button onclick="reset()" class="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-bold py-4 px-6 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105 active:scale-95">
+                        Reset System
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="wasm/gg_model.js"></script>
+    <script src="js/simulation.js"></script>
+</body>
+</html>
