@@ -5,58 +5,62 @@
 
 @import "tailwindcss";
 
-html {
-    font-size: 14px;
+@layer base {
+    html {
+        font-size: 16px;
+    }
 }
 
-input[type="range"]::-webkit-slider-track {
-    background: #4b5563; /* gray-600 - lighter than before */
-    border-radius: 0.5rem;
-    height: 0.5rem;
-}
+@layer components {
+    input[type="range"]::-webkit-slider-track {
+        background: #4b5563; /* gray-600 - lighter than before */
+        border-radius: 0.5rem;
+        height: 0.5rem;
+    }
 
-input[type="range"]::-moz-range-track {
-    background: #4b5563;
-    border-radius: 0.5rem;
-    height: 0.5rem;
-}
+    input[type="range"]::-moz-range-track {
+        background: #4b5563;
+        border-radius: 0.5rem;
+        height: 0.5rem;
+    }
 
-/* Range input thumb */
-input[type="range"]::-webkit-slider-thumb {
-    appearance: none;
-    width: 1.25rem;
-    height: 1.25rem;
-    background: #22d3ee; /* cyan-400 */
-    border-radius: 50%;
-    cursor: pointer;
-    margin-top: -0.375rem; /* Centers thumb on track */
-    transition: background-color 150ms ease;
-}
+    /* Range input thumb */
+    input[type="range"]::-webkit-slider-thumb {
+        appearance: none;
+        width: 1.25rem;
+        height: 1.25rem;
+        background: #22d3ee; /* cyan-400 */
+        border-radius: 50%;
+        cursor: pointer;
+        margin-top: -0.375rem; /* Centers thumb on track */
+        transition: background-color 150ms ease;
+    }
 
-input[type="range"]::-moz-range-thumb {
-    width: 1.25rem;
-    height: 1.25rem;
-    background: #22d3ee;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background-color 150ms ease;
-}
+    input[type="range"]::-moz-range-thumb {
+        width: 1.25rem;
+        height: 1.25rem;
+        background: #22d3ee;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background-color 150ms ease;
+    }
 
-input[type="range"]:hover::-webkit-slider-thumb {
-    background: #06b6d4; /* cyan-500 */
-}
+    input[type="range"]:hover::-webkit-slider-thumb {
+        background: #06b6d4; /* cyan-500 */
+    }
 
-input[type="range"]:hover::-moz-range-thumb {
-    background: #06b6d4;
-}
+    input[type="range"]:hover::-moz-range-thumb {
+        background: #06b6d4;
+    }
 
-input[type="range"]:focus::-webkit-slider-thumb {
-    outline: 2px solid #22d3ee;
-    outline-offset: 2px;
-}
+    input[type="range"]:focus::-webkit-slider-thumb {
+        outline: 2px solid #22d3ee;
+        outline-offset: 2px;
+    }
 
-input[type="range"]:focus::-moz-range-thumb {
-    outline: 2px solid #22d3ee;
-    outline-offset: 2px;
+    input[type="range"]:focus::-moz-range-thumb {
+        outline: 2px solid #22d3ee;
+        outline-offset: 2px;
+    }
 }
