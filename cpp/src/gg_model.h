@@ -18,6 +18,7 @@ struct ModelSettings {
     float theta;    // Diffusive mass threshold for knife-edge instability
     float sigma;    // Noise parameter NOT WORKING
     float alpha;    // Reduced boundary mass threshold when diffusive mass < theta
+    bool useSymmetry = false;  // Toggle wedge-only computation (EXPERIMENTAL - may have bugs)
 };
 
 struct Grid {
@@ -104,10 +105,14 @@ void Model::diffusion() {
             float sum = snowflake.diffusiveMass[i][j];
             
             for (auto& neighbor : neighbors) {
-                int x = (N + i + neighbor.first) % N;
-                int y = (N + j + neighbor.second) % N;
+                int x = i + neighbor.first;
+                int y = j + neighbor.second;
                 
-                if (snowflake.isCrystal[x][y]) {
+                // Boundary check - clamp instead of wrap (removed modulo)
+                if (x < 0 || x >= N || y < 0 || y >= N) {
+                    // Reflecting boundary: use current cell's value
+                    sum += snowflake.diffusiveMass[i][j];
+                } else if (snowflake.isCrystal[x][y]) {
                     // Reflecting boundary: use current cell's value instead of crystal neighbor
                     sum += snowflake.diffusiveMass[i][j];
                 } else {
@@ -162,9 +167,11 @@ void Model::attachment() {
             // Count attached neighbors
             int attachedNeighbors = 0;
             for (auto& neighbor : neighbors) {
-                int x = (N + i + neighbor.first) % N;
-                int y = (N + j + neighbor.second) % N;
-                if (snowflake.isCrystal[x][y] == 1) {
+                int x = i + neighbor.first;
+                int y = j + neighbor.second;
+                
+                // Boundary check (removed modulo)
+                if (x >= 0 && x < N && y >= 0 && y < N && snowflake.isCrystal[x][y] == 1) {
                     attachedNeighbors++;
                 }
             }
@@ -192,10 +199,11 @@ void Model::attachment() {
                     float neighbourhoodDiffusiveMass = snowflake.diffusiveMass[i][j];
                     
                     for (auto& neighbor : neighbors) {
-                        int x = (N + i + neighbor.first) % N;
-                        int y = (N + j + neighbor.second) % N;
-                        // Only count diffusive mass at non-crystal sites
-                        if (snowflake.isCrystal[x][y] == 0) {
+                        int x = i + neighbor.first;
+                        int y = j + neighbor.second;
+                        
+                        // Boundary check (removed modulo)
+                        if (x >= 0 && x < N && y >= 0 && y < N && snowflake.isCrystal[x][y] == 0) {
                             neighbourhoodDiffusiveMass += snowflake.diffusiveMass[x][y];
                         }
                     }
@@ -222,9 +230,11 @@ void Model::attachment() {
                 
                 // Mark all non-crystal neighbors as boundary sites
                 for (auto& neighbor : neighbors) {
-                    int x = (N + i + neighbor.first) % N;
-                    int y = (N + j + neighbor.second) % N;
-                    if (snowflake.isCrystal[x][y] == 0) {
+                    int x = i + neighbor.first;
+                    int y = j + neighbor.second;
+                    
+                    // Boundary check (removed modulo)
+                    if (x >= 0 && x < N && y >= 0 && y < N && snowflake.isCrystal[x][y] == 0) {
                         newIsBoundary[x][y] = 1;
                     }
                 }
