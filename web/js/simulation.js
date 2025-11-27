@@ -70,7 +70,11 @@ function set_grid_size(size) {
 }
 
 function applyPreset(index) {
+    try {
     Module.apply_preset(index);
+    } catch (e) {
+        console.error("Error applying preset:", e);
+    }
     
     // Update all UI controls with actual values from C++
     alphaInput.value = Module.get_current_alpha().toFixed(3);
@@ -130,7 +134,11 @@ function populatePresets() {
 }
 
 Module.onRuntimeInitialized = () => {
+    try {
     Module.init();
+    } catch (e) {
+        console.error("Error during Module initialization:", e);
+    }
 
     populatePresets();
 

@@ -12,61 +12,46 @@ struct SnowflakePreset {
 
 // Presets based on Gravner-Griffeath paper
 static const std::vector<SnowflakePreset> SNOWFLAKE_PRESETS = {
-    // Fig 2 tr: A classic sectored plate form.
-    {
-        "Sectored Plate",
-        {
-            .gridSize = 512,
-            .rho = 0.8f,
-            .beta = 2.9f,
-            .kappa = 0.05f,
-            .mu = 0.015f,
-            .gamma = 0.0001f,
-            .theta = 0.004f,
-            .sigma = 0.00002f,
-            .alpha = 0.006f
-        }
-    },
     // Fig 9: A very low-beta, compact plate.
     {
-        "Low-Beta Plate",
+        "Compact Plate (try increasing rho)",
         {
             .gridSize = 512,
-            .rho = 1.3f,
-            .beta = 0.08f,
-            .kappa = 0.07f,
-            .mu = 0.00005f,
-            .gamma = 0.0f,
-            .theta = 0.003f,
+            .rho = 0.4f,
+            .beta = 1.3f,
+            .kappa = 0.003f,
+            .mu = 0.07,
+            .gamma = 0.00005f,
+            .theta = 0.025f,
             .sigma = 0.0f,
-            .alpha = 0.025f
+            .alpha = 0.08f
         }
     },
     // Fig 10: Illustrates tip faceting at a very low beta.
     {
-        "Tip Faceting",
+        "Tip Faceting (try varying beta)",
         {
             .gridSize = 512,
             .rho = 0.8f,
-            .beta = 0.004f,
-            .kappa = 0.015f,
-            .mu = 0.0001f,
-            .gamma = 0.0f,
-            .theta = 0.05f,
+            .beta = 2.6f,
+            .kappa = 0.05f,
+            .mu = 0.015f,
+            .gamma = 0.0001f,
+            .theta = 0.001f,
             .sigma = 0.0f,
-            .alpha = 0.001f
+            .alpha = 0.004f
         }
     },
     // Fig 11: A highly branched dendritic form.
     {
-        "Highly Branched Dendrite",
+        "Highly Branched Dendrite (try varying kappa)",
         {
             .gridSize = 512,
             .rho = 0.635f,
             .beta = 1.6f,
-            .kappa = 0.015f,
-            .mu = 0.0005f,
-            .gamma = 0.0f,
+            .kappa = 0.0075f,
+            .mu = 0.015f,
+            .gamma = 0.0005f,
             .theta = 0.025f,
             .sigma = 0.0f,
             .alpha = 0.4f
@@ -74,13 +59,13 @@ static const std::vector<SnowflakePreset> SNOWFLAKE_PRESETS = {
     },
     // Fig 12: A delicate, sparse stellar dendrite.
     {
-        "Delicate Stellar Dendrite",
+        "Delicate Stellar Dendrite (try varying mu)",
         {
             .gridSize = 512,
             .rho = 0.5f,
             .beta = 1.4f,
             .kappa = 0.001f,
-            .mu = 0.001f,
+            .mu = 0.06f,
             .gamma = 0.001f,
             .theta = 0.005f,
             .sigma = 0.0f,
@@ -96,10 +81,10 @@ static const std::vector<SnowflakePreset> SNOWFLAKE_PRESETS = {
             .beta = 1.75f,
             .kappa = 0.15f,
             .mu = 0.015f,
-            .gamma = 0.00001f,
-            .theta = 0.2f,
+            .gamma = 0.0001f,
+            .theta = 0.026f,
             .sigma = 0.0f,
-            .alpha = 0.026f
+            .alpha = 0.2f
         }
     },
     // Fig 13 m: A stellar plate form.
