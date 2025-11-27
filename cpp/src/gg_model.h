@@ -19,6 +19,7 @@ struct ModelSettings {
     float sigma;    // Noise parameter NOT WORKING
     float alpha;    // Reduced boundary mass threshold when diffusive mass < theta
     bool useSymmetry = false;  // Toggle wedge-only computation (EXPERIMENTAL - may have bugs)
+    int boundaryMargin = 2;
 };
 
 struct Grid {
@@ -33,6 +34,7 @@ class Model {
         Model(ModelSettings&);
         void initialize();
         void time_step();
+        bool hasReachedBoundary() const;
         Grid snowflake;
     private:
         const float kernelWeight = 1.0f / 7.0f;
@@ -83,7 +85,30 @@ void Model::initialize() {
     }
 }
 
+bool Model::hasReachedBoundary() const {
+    const int N = settings->gridSize;
+    const int margin = settings->boundaryMargin;
+    
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < N; ++j) {
+            if (snowflake.isCrystal[i][j]) {
+                if (i < margin || i >= N - margin || 
+                    j < margin || j >= N - margin) {
+                    return true;
+                }
+            }
+        }
+    }
+    
+    return false;
+}
+
 void Model::time_step() {
+    // Skip simulation if crystal has reached the boundary
+    if (hasReachedBoundary()) {
+        return;
+    }
+    
     diffusion();
     freezing();
     attachment();

@@ -216,7 +216,7 @@ void Visualizer::changeDrawingScale(float delta) {
         for (int x = 0; x < windowSize; ++x) {
             getHexIndex(x, y, row, col);
             if (row < 0 || row >= settings->gridSize || col < 0 || col >= settings->gridSize) {
-                pixelToHex[y * windowSize + x] = Point{0, 0};
+                pixelToHex[y * windowSize + x] = Point{settings->gridSize-1, 0};
             } else {
                 pixelToHex[y * windowSize + x] = Point{row, col};
             }
