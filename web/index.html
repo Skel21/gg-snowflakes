@@ -12,7 +12,7 @@
     
     <!-- Article Section -->
     <div class="bg-gray-900">
-        <div class="max-w-4xl mx-auto px-8 py-12" id="article-container">
+        <div class="max-w-6xl mx-auto px-8 py-12" id="article-container">
             <!-- Article content will be loaded here -->
         </div>
     </div>
@@ -24,9 +24,9 @@
             <p class="text-gray-400 mt-2">Adjust parameters below to explore different snowflake patterns</p>
         </div>
         
-        <div class="flex flex-col md:flex-row min-h-screen">
+        <div class="flex flex-col md:flex-row">
             <!-- Simulation Canvas -->
-            <div class="flex-1 flex items-center justify-center">
+            <div class="flex-1 flex items-center justify-center p-8">
                 <canvas id="simulation" class="w-[min(90vw,90vh)]"></canvas>
             </div>
 
@@ -157,7 +157,7 @@
                     </div>
 
                     <!-- Reset Button -->
-                    <div class="pt-4">
+                    <div class="pt-4 pb-8">
                         <button onclick="reset()" class="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-bold py-4 px-6 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105 active:scale-95">
                             Reset System
                         </button>
@@ -169,7 +169,7 @@
 
     <script>
         // Load the article content
-        fetch('description.html')
+        fetch('article-content.html')
             .then(response => response.text())
             .then(html => {
                 document.getElementById('article-container').innerHTML = html;
