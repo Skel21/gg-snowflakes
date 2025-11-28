@@ -40,6 +40,15 @@ jobs:
             -s INITIAL_MEMORY=64MB \
             -s ALLOW_MEMORY_GROWTH=1
     
+      - name: Install Pandoc
+        run: sudo apt-get install -y pandoc
+
+      - name: Convert markdown to HTML
+        run: |
+          pandoc ./web/DESCRIPTION.md -o ./dist/description.html \
+            --mathjax \
+            --wrap=preserve
+
       - name: Copy static files
         run: |
           cp -r ./web/js/* ./dist/js/
@@ -51,7 +60,6 @@ jobs:
           input: ./web/css/style.css
           output: ./dist/css/style.css
           params: "--minify"
-
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

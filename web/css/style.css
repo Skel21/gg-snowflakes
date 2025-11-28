@@ -58,4 +58,44 @@
         outline: 2px solid #22d3ee;
         outline-offset: 2px;
     }
+
+    #article-container h1 {
+        @apply text-4xl font-bold mb-6 text-gray-100;
+    }
+    
+    #article-container h2 {
+        @apply text-3xl font-semibold mt-8 mb-4 text-gray-200;
+    }
+    
+    #article-container h3 {
+        @apply text-2xl font-semibold mt-6 mb-3 text-gray-200;
+    }
+    
+    #article-container h4 {
+        @apply text-xl font-semibold mt-5 mb-2 text-gray-200;
+    }
+    
+    #article-container p {
+        @apply mb-4 leading-7 text-gray-300;
+    }
+    
+    #article-container ul, #article-container ol {
+        @apply mb-4 pl-8 text-gray-300;
+    }
+    
+    #article-container li {
+        @apply mb-2;
+    }
+    
+    #article-container strong {
+        @apply text-gray-100 font-semibold;
+    }
+    
+    #article-container hr {
+        @apply border-gray-600 my-8;
+    }
+    
+    #article-container a {
+        @apply text-cyan-400 hover:text-cyan-300 underline;
+    }
 }

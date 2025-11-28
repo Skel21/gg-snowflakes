@@ -6,151 +6,179 @@
     <title>Gravner-Griffeath Snowflake Simulation</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
 </head>
 <body class="bg-gray-900 text-gray-100">
-
-    <div class="flex flex-col md:flex-row h-screen">
-        <!-- Simulation Canvas -->
-        <div class="flex-1 flex items-center justify-center">
-            <canvas id="simulation" class="w-[min(90vw,90vh)]"></canvas>
+    
+    <!-- Article Section -->
+    <div class="bg-gray-900">
+        <div class="max-w-4xl mx-auto px-8 py-12" id="article-container">
+            <!-- Article content will be loaded here -->
         </div>
+    </div>
 
-        <!-- Sidebar Controls -->
-        <div class="w-full lg:w-80 xl:w-96 bg-gray-800 overflow-y-auto p-6 space-y-12">
-            <div class="text-4xl font-bold flex justify-center items-center flex-col">
-                <h2>Controls</h2>
-                <button id="play-pause-button" class="material-icons text-6xl text-gray-100 hover:text-blue-400" onclick="play_pause()">pause</button>
+    <!-- Simulation Section -->
+    <div class="bg-gradient-to-b from-gray-900 to-gray-800 py-8">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-gray-200">Interactive Simulation</h2>
+            <p class="text-gray-400 mt-2">Adjust parameters below to explore different snowflake patterns</p>
+        </div>
+        
+        <div class="flex flex-col md:flex-row min-h-screen">
+            <!-- Simulation Canvas -->
+            <div class="flex-1 flex items-center justify-center">
+                <canvas id="simulation" class="w-[min(90vw,90vh)]"></canvas>
             </div>
 
-            <!-- Presets of nice snowflakes -->
-            <div class="space-y-4">
-                <h3 class="text-xl font-semibold text-gray-300">Presets</h3>
-                <div id="preset-container"></div>
-            </div>
-
-            <div class="space-y-12 text-2xl">
-                <!-- Iterations Slider -->
-                <div class="space-y-4">
-                    <label for="iterations-per-frame" class="flex items-center justify-around text-gray-300">
-                        <span class="group relative cursor-help">
-                            Iterations per Frame
-                            <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-gray-700 text-gray-100 rounded-lg whitespace-nowrap border border-gray-600">
-                                Number of simulation steps per frame
-                            </span>
-                        </span>
-                        <span id="iterations-per-frame-output"></span>
-                    </label>
-                    <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="iterations-per-frame" min="1" max="25" step="1" oninput="set_iterations_per_frame(this.value)" onchange="set_iterations_per_frame(this.value)">
+            <!-- Sidebar Controls -->
+            <div class="w-full lg:w-80 xl:w-96 bg-gray-800 overflow-y-auto p-6 space-y-12">
+                <div class="text-4xl font-bold flex justify-center items-center flex-col">
+                    <h2>Controls</h2>
+                    <button id="play-pause-button" class="material-icons text-6xl text-gray-100 hover:text-blue-400" onclick="play_pause()">pause</button>
                 </div>
 
-                <!-- Rho Slider -->
+                <!-- Presets of nice snowflakes -->
                 <div class="space-y-4">
-                    <label for="rho" class="flex items-center justify-around text-gray-300">
-                        <span class="group relative cursor-help">
-                            Rho (ρ)
-                            <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-gray-700 text-gray-100 rounded-lg whitespace-nowrap border border-gray-600">
-                                Background vapor density (humidity)
-                            </span>
-                        </span>
-                        <span id="rho-output"></span>
-                    </label>
-                    <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="rho" min="0.0" max="1.0" step="0.01" oninput="set_rho(this.value)" onchange="set_rho(this.value)">
+                    <h3 class="text-xl font-semibold text-gray-300">Presets</h3>
+                    <div id="preset-container"></div>
                 </div>
 
-                <!-- Beta Slider -->
-                <div class="space-y-4">
-                    <label for="beta" class="flex items-center justify-around text-gray-300">
-                        <span class="group relative cursor-help">
-                            Beta (β)
-                            <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-gray-700 text-gray-100 rounded-lg whitespace-nowrap border border-gray-600">
-                                Attachment threshold at tips/edges
+                <div class="space-y-12 text-2xl">
+                    <!-- Iterations Slider -->
+                    <div class="space-y-4">
+                        <label for="iterations-per-frame" class="flex items-center justify-around text-gray-300">
+                            <span class="group relative cursor-help">
+                                Iterations per Frame
+                                <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-gray-700 text-gray-100 rounded-lg whitespace-nowrap border border-gray-600 z-10">
+                                    Number of simulation steps per frame
+                                </span>
                             </span>
-                        </span>
-                        <span id="beta-output"></span>
-                    </label>
-                    <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="beta" min="1.0" max="3.0" step="0.01" oninput="set_beta(this.value)" onchange="set_beta(this.value)">
-                </div>
+                            <span id="iterations-per-frame-output"></span>
+                        </label>
+                        <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="iterations-per-frame" min="1" max="25" step="1" oninput="set_iterations_per_frame(this.value)" onchange="set_iterations_per_frame(this.value)">
+                    </div>
 
-                <!-- Kappa Slider -->
-                <div class="space-y-4">
-                    <label for="kappa" class="flex items-center justify-around text-gray-300">
-                        <span class="group relative cursor-help">
-                            Kappa (κ)
-                            <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-gray-700 text-gray-100 rounded-lg whitespace-nowrap border border-gray-600">
-                                Direct crystallization rate
+                    <!-- Rho Slider -->
+                    <div class="space-y-4">
+                        <label for="rho" class="flex items-center justify-around text-gray-300">
+                            <span class="group relative cursor-help">
+                                Rho (ρ)
+                                <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-gray-700 text-gray-100 rounded-lg whitespace-nowrap border border-gray-600 z-10">
+                                    Background vapor density (humidity)
+                                </span>
                             </span>
-                        </span>
-                        <span id="kappa-output"></span>
-                    </label>
-                    <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="kappa" min="0.0" max="0.1" step="0.001" oninput="set_kappa(this.value)" onchange="set_kappa(this.value)">
-                </div>
+                            <span id="rho-output"></span>
+                        </label>
+                        <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="rho" min="0.0" max="1.0" step="0.01" oninput="set_rho(this.value)" onchange="set_rho(this.value)">
+                    </div>
 
-                <!-- Mu Slider -->
-                <div class="space-y-4">
-                    <label for="mu" class="flex items-center justify-around text-gray-300">
-                        <span class="group relative cursor-help">
-                            Mu (μ)
-                            <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-gray-700 text-gray-100 rounded-lg whitespace-nowrap border border-gray-600">
-                                Boundary mass evaporation rate
+                    <!-- Beta Slider -->
+                    <div class="space-y-4">
+                        <label for="beta" class="flex items-center justify-around text-gray-300">
+                            <span class="group relative cursor-help">
+                                Beta (β)
+                                <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-gray-700 text-gray-100 rounded-lg whitespace-nowrap border border-gray-600 z-10">
+                                    Attachment threshold at tips/edges
+                                </span>
                             </span>
-                        </span>
-                        <span id="mu-output"></span>
-                    </label>
-                    <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="mu" min="0.0" max="0.1" step="0.001" oninput="set_mu(this.value)" onchange="set_mu(this.value)">
-                </div>
+                            <span id="beta-output"></span>
+                        </label>
+                        <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="beta" min="1.0" max="3.0" step="0.01" oninput="set_beta(this.value)" onchange="set_beta(this.value)">
+                    </div>
 
-                <!-- Alpha Slider -->
-                <div class="space-y-4">
-                    <label for="alpha" class="flex items-center justify-around text-gray-300">
-                        <span class="group relative cursor-help">
-                            Alpha (α)
-                            <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-gray-700 text-gray-100 rounded-lg whitespace-nowrap border border-gray-600">
-                                Reduced attachment threshold
+                    <!-- Kappa Slider -->
+                    <div class="space-y-4">
+                        <label for="kappa" class="flex items-center justify-around text-gray-300">
+                            <span class="group relative cursor-help">
+                                Kappa (κ)
+                                <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-gray-700 text-gray-100 rounded-lg whitespace-nowrap border border-gray-600 z-10">
+                                    Direct crystallization rate
+                                </span>
                             </span>
-                        </span>
-                        <span id="alpha-output"></span>
-                    </label>
-                    <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="alpha" min="0.0" max="1.0" step="0.01" oninput="set_alpha(this.value)" onchange="set_alpha(this.value)">
-                </div>
+                            <span id="kappa-output"></span>
+                        </label>
+                        <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="kappa" min="0.0" max="0.1" step="0.001" oninput="set_kappa(this.value)" onchange="set_kappa(this.value)">
+                    </div>
 
-                <!-- Theta Slider -->
-                <div class="space-y-4">
-                    <label for="theta" class="flex items-center justify-around text-gray-300">
-                        <span class="group relative cursor-help">
-                            Theta (θ)
-                            <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-gray-700 text-gray-100 rounded-lg whitespace-nowrap border border-gray-600">
-                                Vapor threshold for knife-edge effect
+                    <!-- Mu Slider -->
+                    <div class="space-y-4">
+                        <label for="mu" class="flex items-center justify-around text-gray-300">
+                            <span class="group relative cursor-help">
+                                Mu (μ)
+                                <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-gray-700 text-gray-100 rounded-lg whitespace-nowrap border border-gray-600 z-10">
+                                    Boundary mass evaporation rate
+                                </span>
                             </span>
-                        </span>
-                        <span id="theta-output"></span>
-                    </label>
-                    <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="theta" min="0.0" max="0.1" step="0.001" oninput="set_theta(this.value)" onchange="set_theta(this.value)">
-                </div>
+                            <span id="mu-output"></span>
+                        </label>
+                        <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="mu" min="0.0" max="0.1" step="0.001" oninput="set_mu(this.value)" onchange="set_mu(this.value)">
+                    </div>
 
-                <!-- Grid Size Slider -->
-                <div class="space-y-4">
-                    <label for="grid-size" class="flex items-center justify-around text-gray-300">
-                        <span class="group relative cursor-help">
-                            Grid Size
-                            <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-gray-700 text-gray-100 rounded-lg whitespace-nowrap border border-gray-600">
-                                Simulation grid dimensions
+                    <!-- Alpha Slider -->
+                    <div class="space-y-4">
+                        <label for="alpha" class="flex items-center justify-around text-gray-300">
+                            <span class="group relative cursor-help">
+                                Alpha (α)
+                                <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-gray-700 text-gray-100 rounded-lg whitespace-nowrap border border-gray-600 z-10">
+                                    Reduced attachment threshold
+                                </span>
                             </span>
-                        </span>
-                        <span id="grid-size-output"></span>
-                    </label>
-                    <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="grid-size" min="100" max="1000" step="25" oninput="set_grid_size(this.value)" onchange="set_grid_size(this.value)">
-                </div>
+                            <span id="alpha-output"></span>
+                        </label>
+                        <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="alpha" min="0.0" max="1.0" step="0.01" oninput="set_alpha(this.value)" onchange="set_alpha(this.value)">
+                    </div>
 
-                <!-- Reset Button -->
-                <div class="pt-4">
-                    <button onclick="reset()" class="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-bold py-4 px-6 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105 active:scale-95">
-                        Reset System
-                    </button>
+                    <!-- Theta Slider -->
+                    <div class="space-y-4">
+                        <label for="theta" class="flex items-center justify-around text-gray-300">
+                            <span class="group relative cursor-help">
+                                Theta (θ)
+                                <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-gray-700 text-gray-100 rounded-lg whitespace-nowrap border border-gray-600 z-10">
+                                    Vapor threshold for knife-edge effect
+                                </span>
+                            </span>
+                            <span id="theta-output"></span>
+                        </label>
+                        <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="theta" min="0.0" max="0.1" step="0.001" oninput="set_theta(this.value)" onchange="set_theta(this.value)">
+                    </div>
+
+                    <!-- Grid Size Slider -->
+                    <div class="space-y-4">
+                        <label for="grid-size" class="flex items-center justify-around text-gray-300">
+                            <span class="group relative cursor-help">
+                                Grid Size
+                                <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-gray-700 text-gray-100 rounded-lg whitespace-nowrap border border-gray-600 z-10">
+                                    Simulation grid dimensions
+                                </span>
+                            </span>
+                            <span id="grid-size-output"></span>
+                        </label>
+                        <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="grid-size" min="100" max="1000" step="25" oninput="set_grid_size(this.value)" onchange="set_grid_size(this.value)">
+                    </div>
+
+                    <!-- Reset Button -->
+                    <div class="pt-4">
+                        <button onclick="reset()" class="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-bold py-4 px-6 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105 active:scale-95">
+                            Reset System
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <script>
+        // Load the article content
+        fetch('description.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('article-container').innerHTML = html;
+                // Trigger MathJax to render equations
+                if (window.MathJax) {
+                    MathJax.typesetPromise();
+                }
+            });
+    </script>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="wasm/gg_model.js"></script>
     <script src="js/simulation.js"></script>
