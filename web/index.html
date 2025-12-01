@@ -8,20 +8,20 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
 </head>
-<body class="bg-gray-900 text-gray-100">
+<body class="bg-neutral-900 text-neutral-300 antialiased">
     
     <!-- Article Section -->
-    <div class="bg-gray-900">
-        <div class="max-w-6xl mx-auto px-8 py-12" id="article-container">
+    <div class="bg-transparent">
+        <div class="max-w-5xl mx-auto px-8 py-12" id="article-container">
             <!-- Article content will be loaded here -->
         </div>
     </div>
 
     <!-- Simulation Section -->
-    <div class="bg-gradient-to-b from-gray-900 to-gray-800 py-8">
+    <div class="bg-transparent py-8 border-t border-neutral-800">
         <div class="text-center mb-8">
-            <h2 class="text-3xl font-bold text-gray-200">Interactive Simulation</h2>
-            <p class="text-gray-400 mt-2">Adjust parameters below to explore different snowflake patterns</p>
+            <h2 class="text-3xl font-light tracking-tight text-neutral-50">Interactive Simulation</h2>
+            <p class="text-neutral-500 mt-2">Adjust parameters below to explore different snowflake patterns</p>
         </div>
         
         <div class="flex flex-col md:flex-row">
@@ -31,134 +31,134 @@
             </div>
 
             <!-- Sidebar Controls -->
-            <div class="w-full lg:w-80 xl:w-96 bg-gray-800 overflow-y-auto p-6 space-y-12">
-                <div class="text-4xl font-bold flex justify-center items-center flex-col">
-                    <h2>Controls</h2>
-                    <button id="play-pause-button" class="material-icons text-6xl text-gray-100 hover:text-blue-400" onclick="play_pause()">pause</button>
+            <div class="w-full lg:w-80 xl:w-96 bg-neutral-800 border-l border-neutral-800 overflow-y-auto p-4 space-y-5">
+                <div class="text-lg font-light flex justify-center items-center flex-col">
+                    <h2 class="text-neutral-50">Controls</h2>
+                    <button id="play-pause-button" class="material-icons text-3xl text-neutral-500 hover:text-neutral-300 transition-colors duration-300" onclick="play_pause()">pause</button>
                 </div>
 
                 <!-- Presets of nice snowflakes -->
-                <div class="space-y-4">
-                    <h3 class="text-xl font-semibold text-gray-300">Presets</h3>
+                <div class="space-y-2">
+                    <h3 class="text-xs font-medium text-neutral-500 uppercase tracking-wider">Presets</h3>
                     <div id="preset-container"></div>
                 </div>
 
-                <div class="space-y-12 text-2xl">
+                <div class="space-y-5 text-xs">
                     <!-- Iterations Slider -->
-                    <div class="space-y-4">
-                        <label for="iterations-per-frame" class="flex items-center justify-around text-gray-300">
+                    <div class="space-y-1.5">
+                        <label for="iterations-per-frame" class="flex items-center justify-between text-neutral-400">
                             <span class="group relative cursor-help">
                                 Iterations per Frame
-                                <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-gray-700 text-gray-100 rounded-lg whitespace-nowrap border border-gray-600 z-10">
+                                <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs bg-neutral-700 text-neutral-100 rounded-lg whitespace-nowrap border border-neutral-600 z-10">
                                     Number of simulation steps per frame
                                 </span>
                             </span>
-                            <span id="iterations-per-frame-output"></span>
+                            <span id="iterations-per-frame-output" class="text-neutral-500"></span>
                         </label>
-                        <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="iterations-per-frame" min="1" max="25" step="1" oninput="set_iterations_per_frame(this.value)" onchange="set_iterations_per_frame(this.value)">
+                        <input type="range" class="w-full h-1.5 bg-neutral-700 rounded-lg appearance-none cursor-pointer" id="iterations-per-frame" min="1" max="25" step="1" oninput="set_iterations_per_frame(this.value)" onchange="set_iterations_per_frame(this.value)">
                     </div>
 
                     <!-- Rho Slider -->
-                    <div class="space-y-4">
-                        <label for="rho" class="flex items-center justify-around text-gray-300">
+                    <div class="space-y-1.5">
+                        <label for="rho" class="flex items-center justify-between text-neutral-400">
                             <span class="group relative cursor-help">
                                 Rho (ρ)
-                                <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-gray-700 text-gray-100 rounded-lg whitespace-nowrap border border-gray-600 z-10">
+                                <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs bg-neutral-700 text-neutral-100 rounded-lg whitespace-nowrap border border-neutral-600 z-10">
                                     Background vapor density (humidity)
                                 </span>
                             </span>
-                            <span id="rho-output"></span>
+                            <span id="rho-output" class="text-neutral-500"></span>
                         </label>
-                        <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="rho" min="0.0" max="1.0" step="0.01" oninput="set_rho(this.value)" onchange="set_rho(this.value)">
+                        <input type="range" class="w-full h-1.5 bg-neutral-700 rounded-lg appearance-none cursor-pointer" id="rho" min="0.0" max="1.0" step="0.01" oninput="set_rho(this.value)" onchange="set_rho(this.value)">
                     </div>
 
                     <!-- Beta Slider -->
-                    <div class="space-y-4">
-                        <label for="beta" class="flex items-center justify-around text-gray-300">
+                    <div class="space-y-1.5">
+                        <label for="beta" class="flex items-center justify-between text-neutral-400">
                             <span class="group relative cursor-help">
                                 Beta (β)
-                                <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-gray-700 text-gray-100 rounded-lg whitespace-nowrap border border-gray-600 z-10">
+                                <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs bg-neutral-700 text-neutral-100 rounded-lg whitespace-nowrap border border-neutral-600 z-10">
                                     Attachment threshold at tips/edges
                                 </span>
                             </span>
-                            <span id="beta-output"></span>
+                            <span id="beta-output" class="text-neutral-500"></span>
                         </label>
-                        <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="beta" min="1.0" max="3.0" step="0.01" oninput="set_beta(this.value)" onchange="set_beta(this.value)">
+                        <input type="range" class="w-full h-1.5 bg-neutral-700 rounded-lg appearance-none cursor-pointer" id="beta" min="1.0" max="3.0" step="0.01" oninput="set_beta(this.value)" onchange="set_beta(this.value)">
                     </div>
 
                     <!-- Kappa Slider -->
-                    <div class="space-y-4">
-                        <label for="kappa" class="flex items-center justify-around text-gray-300">
+                    <div class="space-y-1.5">
+                        <label for="kappa" class="flex items-center justify-between text-neutral-400">
                             <span class="group relative cursor-help">
                                 Kappa (κ)
-                                <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-gray-700 text-gray-100 rounded-lg whitespace-nowrap border border-gray-600 z-10">
+                                <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs bg-neutral-700 text-neutral-100 rounded-lg whitespace-nowrap border border-neutral-600 z-10">
                                     Direct crystallization rate
                                 </span>
                             </span>
-                            <span id="kappa-output"></span>
+                            <span id="kappa-output" class="text-neutral-500"></span>
                         </label>
-                        <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="kappa" min="0.0" max="0.1" step="0.001" oninput="set_kappa(this.value)" onchange="set_kappa(this.value)">
+                        <input type="range" class="w-full h-1.5 bg-neutral-700 rounded-lg appearance-none cursor-pointer" id="kappa" min="0.0" max="0.1" step="0.001" oninput="set_kappa(this.value)" onchange="set_kappa(this.value)">
                     </div>
 
                     <!-- Mu Slider -->
-                    <div class="space-y-4">
-                        <label for="mu" class="flex items-center justify-around text-gray-300">
+                    <div class="space-y-1.5">
+                        <label for="mu" class="flex items-center justify-between text-neutral-400">
                             <span class="group relative cursor-help">
                                 Mu (μ)
-                                <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-gray-700 text-gray-100 rounded-lg whitespace-nowrap border border-gray-600 z-10">
+                                <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs bg-neutral-700 text-neutral-100 rounded-lg whitespace-nowrap border border-neutral-600 z-10">
                                     Boundary mass evaporation rate
                                 </span>
                             </span>
-                            <span id="mu-output"></span>
+                            <span id="mu-output" class="text-neutral-500"></span>
                         </label>
-                        <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="mu" min="0.0" max="0.1" step="0.001" oninput="set_mu(this.value)" onchange="set_mu(this.value)">
+                        <input type="range" class="w-full h-1.5 bg-neutral-700 rounded-lg appearance-none cursor-pointer" id="mu" min="0.0" max="0.1" step="0.001" oninput="set_mu(this.value)" onchange="set_mu(this.value)">
                     </div>
 
                     <!-- Alpha Slider -->
-                    <div class="space-y-4">
-                        <label for="alpha" class="flex items-center justify-around text-gray-300">
+                    <div class="space-y-1.5">
+                        <label for="alpha" class="flex items-center justify-between text-neutral-400">
                             <span class="group relative cursor-help">
                                 Alpha (α)
-                                <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-gray-700 text-gray-100 rounded-lg whitespace-nowrap border border-gray-600 z-10">
+                                <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs bg-neutral-700 text-neutral-100 rounded-lg whitespace-nowrap border border-neutral-600 z-10">
                                     Reduced attachment threshold
                                 </span>
                             </span>
-                            <span id="alpha-output"></span>
+                            <span id="alpha-output" class="text-neutral-500"></span>
                         </label>
-                        <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="alpha" min="0.0" max="1.0" step="0.01" oninput="set_alpha(this.value)" onchange="set_alpha(this.value)">
+                        <input type="range" class="w-full h-1.5 bg-neutral-700 rounded-lg appearance-none cursor-pointer" id="alpha" min="0.0" max="1.0" step="0.01" oninput="set_alpha(this.value)" onchange="set_alpha(this.value)">
                     </div>
 
                     <!-- Theta Slider -->
-                    <div class="space-y-4">
-                        <label for="theta" class="flex items-center justify-around text-gray-300">
+                    <div class="space-y-1.5">
+                        <label for="theta" class="flex items-center justify-between text-neutral-400">
                             <span class="group relative cursor-help">
                                 Theta (θ)
-                                <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-gray-700 text-gray-100 rounded-lg whitespace-nowrap border border-gray-600 z-10">
+                                <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs bg-neutral-700 text-neutral-100 rounded-lg whitespace-nowrap border border-neutral-600 z-10">
                                     Vapor threshold for knife-edge effect
                                 </span>
                             </span>
-                            <span id="theta-output"></span>
+                            <span id="theta-output" class="text-neutral-500"></span>
                         </label>
-                        <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="theta" min="0.0" max="0.1" step="0.001" oninput="set_theta(this.value)" onchange="set_theta(this.value)">
+                        <input type="range" class="w-full h-1.5 bg-neutral-700 rounded-lg appearance-none cursor-pointer" id="theta" min="0.0" max="0.1" step="0.001" oninput="set_theta(this.value)" onchange="set_theta(this.value)">
                     </div>
 
                     <!-- Grid Size Slider -->
-                    <div class="space-y-4">
-                        <label for="grid-size" class="flex items-center justify-around text-gray-300">
+                    <div class="space-y-1.5">
+                        <label for="grid-size" class="flex items-center justify-between text-neutral-400">
                             <span class="group relative cursor-help">
                                 Grid Size
-                                <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-sm bg-gray-700 text-gray-100 rounded-lg whitespace-nowrap border border-gray-600 z-10">
+                                <span class="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs bg-neutral-700 text-neutral-100 rounded-lg whitespace-nowrap border border-neutral-600 z-10">
                                     Simulation grid dimensions
                                 </span>
                             </span>
-                            <span id="grid-size-output"></span>
+                            <span id="grid-size-output" class="text-neutral-500"></span>
                         </label>
-                        <input type="range" class="w-full h-3 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-cyan-400 hover:accent-cyan-400" id="grid-size" min="100" max="1000" step="25" oninput="set_grid_size(this.value)" onchange="set_grid_size(this.value)">
+                        <input type="range" class="w-full h-1.5 bg-neutral-700 rounded-lg appearance-none cursor-pointer" id="grid-size" min="100" max="1000" step="25" oninput="set_grid_size(this.value)" onchange="set_grid_size(this.value)">
                     </div>
 
                     <!-- Reset Button -->
-                    <div class="pt-4 pb-8">
-                        <button onclick="reset()" class="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-bold py-4 px-6 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105 active:scale-95">
+                    <div class="pt-3 pb-4 border-t border-neutral-700 mt-5">
+                        <button onclick="reset()" class="w-full bg-transparent border border-neutral-600 hover:border-neutral-500 hover:bg-neutral-700 text-neutral-400 font-light py-2.5 px-4 rounded transition-all duration-300 text-xs">
                             Reset System
                         </button>
                     </div>
